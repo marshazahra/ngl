@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kirim Pesan ke Marsha 💌</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom right, #e0d4f7, #f4f0ff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 8px 20px rgba(120, 80, 180, 0.2);
+      text-align: center;
+      animation: popIn 0.5s ease-out;
+      opacity: 0;
+      animation: popIn 1s ease-out forwards;
+    }
+
+    h1 {
+      color: #5c3fad;
+      margin-bottom: 20px;
+      font-size: 2rem;
+      animation: fadeIn 2s ease-in-out forwards;
+    }
+
+    h1 span {
+      color: #7e57c2;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 15px;
+      border: 2px solid #c3aef7;
+      border-radius: 12px;
+      resize: none;
+      height: 120px;
+      font-size: 1rem;
+    }
+
+    button {
+      margin-top: 15px;
+      width: 100%;
+      padding: 12px;
+      background-color: #7e57c2;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.3s;
+    }
+
+    button:hover {
+      background-color: #673ab7;
+      transform: scale(1.05);
+    }
+
+    button:active {
+      transform: scale(0.95);
+    }
+
+    .success {
+      color: #4caf50;
+      margin-top: 10px;
+      display: none;
+      animation: bubbleUp 1s ease-out;
+    }
+
+    .greeting {
+      font-size: 1.5rem;
+      color: #7e57c2;
+      font-weight: bold;
+      margin-bottom: 20px;
+      display: none;
+      animation: fadeInGreeting 2s ease-out forwards;
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fadeInGreeting {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes bubbleUp {
+      from { transform: translateY(10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @media (max-width: 600px) {
+      .card {
+        padding: 20px;
+        max-width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="greeting" id="greeting">Halo! 👋 Marsha akan membaca pesan rahasiamu 💌</div>
+    <h1>Kirim Pesan ke <span>Marsha</span> 💌</h1>
+    <textarea id="pesan" placeholder="Tulis pesan rahasiamu di sini..."></textarea>
+
+    <button onclick="kirimPesan()">Kirim Pesan</button>
+    <p id="info" class="success"></p>
+  </div>
+
+  <audio id="sound" src="https://www.soundjay.com/button/beep-07.wav"></audio>
+
+  <script>
+    // Show greeting animation
+    window.onload = function() {
+      setTimeout(function() {
+        document.getElementById('greeting').style.display = 'block';
+      }, 500); // Delay before showing greeting
+    };
+
+    function kirimPesan() {
+      const pesan = document.getElementById('pesan').value.trim();
+
+      if (!pesan) {
+        alert('Pesan tidak boleh kosong!');
+        return;
+      }
+
+      const pesanSebelumnya = JSON.parse(localStorage.getItem('pesanUntukMarsha') || '[]');
+      pesanSebelumnya.push({ isi: pesan, waktu: new Date().toISOString() });
+      localStorage.setItem('pesanUntukMarsha', JSON.stringify(pesanSebelumnya));
+
+      // Play sound effect
+      document.getElementById('sound').play();
+
+      // Show success message with animation
+      const info = document.getElementById('info');
+      info.textContent = `Pesanmu terkirim! 💌`;
+      info.classList.remove('hidden');
+      setTimeout(() => info.classList.add('hidden'), 3000);  // Hide after 3 seconds
+
+      // Reset form
+      document.getElementById('pesan').value = '';
+    }
+  </script>
+</body>
+</html>
